@@ -17,11 +17,6 @@ class HomeViewModel : ViewModel() {
 
     fun setResult() {
         viewModelScope.launch {
-//            if (RetrofitInstance.API.getTodos().isSuccessful) {
-////                _info.value = RetrofitInstance.API.getTodos().body()!!.content
-//            }
-
-//            val data = RetrofitInstance.API.getTodos()
 
             val data = withContext(Dispatchers.IO) {
                 ApiInstance.API.getItems()
@@ -37,13 +32,6 @@ class HomeViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.d("Error", e.toString())
             }
-//
-
-//            val data = withContext(Dispatchers.IO) {
-//                RetrofitInstance.API.getTodos()
-//            }
-//            _info.postValue(data.body()!!.content)
         }
-
     }
 }
