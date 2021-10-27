@@ -1,17 +1,15 @@
 package ge.nlatsabidze.task13
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nlatsabidze.task13.databinding.FragmentHomeBinding
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private lateinit var itemAdapter: ItemAdapter
+    private lateinit var userAdapter: UserAdapter
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -19,17 +17,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setResult()
     }
 
-    private fun setUpRecyclerView() = binding.rvTodos.apply {
-        itemAdapter = ItemAdapter()
-        adapter = itemAdapter
-        layoutManager = LinearLayoutManager(requireContext())
+    private fun setUpRecyclerView() {
+        binding.rvTodos.layoutManager = LinearLayoutManager(requireContext())
+        userAdapter = UserAdapter()
+        binding.rvTodos.adapter = userAdapter.withLoadStateHeaderAndFooter(
+            header = ProgressBarAdapter {userAdapter.retry()},
+            footer = ProgressBarAdapter {userAdapter.retry()}
+        )
     }
 
     private fun setResult() {
-        viewModel.setResult()
-
-        viewModel.info.observe(viewLifecycleOwner, {
-            itemAdapter.info = it
-        })
+        lifecycleScope.launchWhenCreated {
+            viewModel.getData().observe(viewLifecycleOwner, {
+                userAdapter.submitData(lifecycle, it)
+            })
+        }
     }
 }

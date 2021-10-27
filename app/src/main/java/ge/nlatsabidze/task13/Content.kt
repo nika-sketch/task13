@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Content(
-    @Json(name = "created_at")
+    @Json(name = "created_at") val createdAtTitle: String?,
     val createdAt: Any?,
     @Json(name = "date")
     val date: String?,

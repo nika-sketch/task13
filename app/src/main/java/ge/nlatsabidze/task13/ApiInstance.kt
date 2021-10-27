@@ -7,9 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object ApiInstance {
-    val API: Api by lazy {
+
+    val ApiClient by lazy {
         Retrofit.Builder()
-            .baseUrl("https://run.mocky.io")
+            .baseUrl("https://reqres.in/api/")
             .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()))
             .build()
             .create(Api::class.java)
